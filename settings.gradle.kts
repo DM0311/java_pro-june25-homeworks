@@ -22,4 +22,4 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
-
+include("hw02-generics")
