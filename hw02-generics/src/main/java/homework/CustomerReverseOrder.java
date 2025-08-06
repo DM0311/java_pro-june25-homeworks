@@ -5,7 +5,7 @@ import java.util.Deque;
 
 public class CustomerReverseOrder {
 
-    Deque<Customer> stack = new ArrayDeque<>();
+    private Deque<Customer> stack = new ArrayDeque<>();
 
     public void add(Customer customer) {
         stack.addLast(customer);

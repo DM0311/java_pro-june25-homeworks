@@ -2,11 +2,12 @@ package homework;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class CustomerService {
 
-    TreeMap<Customer, String> dataByCustomer = new TreeMap<>(Comparator.comparing(Customer::getScores));
+    private NavigableMap<Customer, String> dataByCustomer = new TreeMap<>(Comparator.comparing(Customer::getScores));
 
     // важно подобрать подходящую Map-у, посмотрите на редко используемые методы, они тут полезны
 
