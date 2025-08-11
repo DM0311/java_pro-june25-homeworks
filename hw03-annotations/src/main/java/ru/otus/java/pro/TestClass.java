@@ -7,19 +7,13 @@ import ru.otus.java.pro.annotations.Test;
 public class TestClass {
 
     @Before
-    public void methodOne() {
-        throw new RuntimeException("Test failed!");
-    }
+    public void methodOne() {}
 
     @Before
-    public void methodTwo() {
-        System.out.println("Test finished successfully!");
-    }
+    public void methodTwo() {}
 
     @Before
-    public void methodThree() {
-        System.out.println("Test finished successfully!");
-    }
+    public void methodThree() {}
 
     @After
     public void methodFour() {
@@ -27,12 +21,16 @@ public class TestClass {
     }
 
     @After
-    public void methodFive() {
-        System.out.println("Test finished successfully!");
-    }
+    public void methodFive() {}
 
     @Test
-    public void methodSix() {
-        System.out.println("Test finished successfully!");
+    public void methodSix() {}
+
+    @Test
+    public void methodSeven() {}
+
+    @Test
+    public void methodEight() {
+        throw new RuntimeException("Test failed!");
     }
 }

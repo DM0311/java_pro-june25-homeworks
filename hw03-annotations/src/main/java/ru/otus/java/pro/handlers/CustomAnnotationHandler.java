@@ -9,24 +9,24 @@ import java.util.Map;
 
 public class CustomAnnotationHandler {
 
-    private static Map<String, List<String>> methodsForTest = new HashMap<>();
+    public void runTests(Class<?> clazz) {
+        Map<String, List<Method>> methodsForTest = findMethods(clazz);
+        executeTests(methodsForTest, clazz);
+    }
 
-    public static void runTests(Class<?> clazz) {
-
-        int total = 0, passed = 0, failed = 0;
-
+    private Map<String, List<Method>> findMethods(Class<?> clazz) {
+        Map<String, List<Method>> methodsForTest = new HashMap<>();
         for (Method method : clazz.getDeclaredMethods()) {
             List<Annotation> annotations = List.of(method.getAnnotations());
             for (Annotation annotation : annotations) {
                 String annotationSimpleName = annotation.annotationType().getSimpleName();
                 switch (annotationSimpleName) {
                     case "Before", "After", "Test":
-                        total++;
                         if (methodsForTest.containsKey(annotationSimpleName)) {
-                            methodsForTest.get(annotationSimpleName).add(method.getName());
+                            methodsForTest.get(annotationSimpleName).add(method);
                         } else {
-                            List<String> methods = new ArrayList<>();
-                            methods.add(method.getName());
+                            List<Method> methods = new ArrayList<>();
+                            methods.add(method);
                             methodsForTest.put(annotationSimpleName, methods);
                         }
                         break;
@@ -35,46 +35,56 @@ public class CustomAnnotationHandler {
                 }
             }
         }
+        return methodsForTest;
+    }
 
-        // @Before run
-        for (String methodName : methodsForTest.get("Before")) {
+    private void executeTests(Map<String, List<Method>> methods, Class<?> clazz) {
+
+        int total = methods.get("Test").size();
+        int passed = 0, failed = 0;
+
+        for (Method method : methods.get("Test")) {
+            Object instance;
             try {
-                Object instance = clazz.getDeclaredConstructor().newInstance();
-                var method = clazz.getDeclaredMethod(methodName);
-                method.setAccessible(true);
-                method.invoke(instance);
-                passed++;
+                instance = clazz.getDeclaredConstructor().newInstance();
+                boolean testPrepared = true;
+
+                // @Before section
+                for (Method beforeMethod : methods.get("Before")) {
+                    if (!isPassed(beforeMethod, instance)) {
+                        testPrepared = false;
+                        break;
+                    }
+                }
+
+                // @Test section
+                if (testPrepared) {
+                    if (isPassed(method, instance)) {
+                        passed++;
+                    }
+                } else {
+                    failed++;
+                }
+
+                // @after section
+                for (Method afterMethod : methods.get("Before")) {
+                    isPassed(afterMethod, instance);
+                }
+
             } catch (Exception e) {
-                failed++;
-            }
-        }
-        // @Test run
-        for (String methodName : methodsForTest.get("Test")) {
-            try {
-                Object instance = clazz.getDeclaredConstructor().newInstance();
-                var method = clazz.getDeclaredMethod(methodName);
-                method.setAccessible(true);
-                method.invoke(instance);
-                passed++;
-            } catch (Exception e) {
-                failed++;
-            }
-        }
-        // @After run
-        for (String methodName : methodsForTest.get("After")) {
-            try {
-                Object instance = clazz.getDeclaredConstructor().newInstance();
-                var method = clazz.getDeclaredMethod(methodName);
-                method.setAccessible(true);
-                method.invoke(instance);
-                passed++;
-            } catch (Exception e) {
-                failed++;
+                throw new RuntimeException(e);
             }
         }
         System.out.printf("Total tests: %s %nPassed: %s%nFailed: %s %n", total, passed, failed);
-        System.out.println(methodsForTest);
+    }
 
-        methodsForTest.clear();
+    private boolean isPassed(Method method, Object instance) {
+        try {
+            method.setAccessible(true);
+            method.invoke(instance);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
