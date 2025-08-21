@@ -8,11 +8,11 @@ public class SimpleATM implements ATM {
     private NavigableMap<Banknote, Integer> bucket = new TreeMap<>(Comparator.comparing(Banknote::getNominal));
 
     public SimpleATM(List<Banknote> banknotes) {
-        deposite(banknotes);
+        deposit(banknotes);
     }
 
     @Override
-    public void deposite(List<Banknote> banknotes) {
+    public void deposit(List<Banknote> banknotes) {
         for (Banknote banknote : banknotes) {
             bucket.merge(banknote, 1, Integer::sum);
         }

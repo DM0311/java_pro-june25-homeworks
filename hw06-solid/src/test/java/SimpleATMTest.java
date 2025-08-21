@@ -27,7 +27,7 @@ public class SimpleATMTest {
     @DisplayName("Проверка корректности внесения средств")
     void deposite() {
         long expectedBalance = 13400l;
-        atm.deposite(
+        atm.deposit(
                 List.of(Banknote.RUB_100, Banknote.RUB_1000, Banknote.RUB_500, Banknote.RUB_100, Banknote.RUB_5000));
         long actualBalance = atm.getBalance();
         assertThat(actualBalance).isEqualTo(expectedBalance);
