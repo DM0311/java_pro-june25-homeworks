@@ -24,4 +24,5 @@ pluginManagement {
 }
 include("hw02-generics")
 include("hw03-annotations")
+include("hw04-heap")
 include("hw06-solid")
