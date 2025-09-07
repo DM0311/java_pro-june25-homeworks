@@ -20,15 +20,17 @@ public class ResourcesFileLoader implements Loader {
     @Override
     public List<Measurement> load() {
 
-        InputStream input = ResourcesFileLoader.class.getClassLoader().getResourceAsStream(filename);
-        try {
-            List<Measurement> parsed =
-                    objectMapper.readValue(input.readAllBytes(),
-                            new TypeReference<List<Measurement>>() {});
-            return parsed;
+        try (InputStream input = ResourcesFileLoader.class.getClassLoader().getResourceAsStream(filename)) {
+            try {
+                List<Measurement> parsed =
+                        objectMapper.readValue(input.readAllBytes(), new TypeReference<List<Measurement>>() {});
+                return parsed;
 
+            } catch (IOException e) {
+                throw new FileProcessException("Error while reading file");
+            }
         } catch (IOException e) {
-            throw new FileProcessException("Error while reading file");
+            throw new FileProcessException("Error while opening file");
         }
     }
 }
