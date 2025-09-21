@@ -17,7 +17,7 @@ import ru.otus.java.pro.source.CalculationImpl;
 public class LogPrinter {
     private static final Logger logger = LoggerFactory.getLogger(LogPrinter.class);
 
-    public LogPrinter() {}
+    private LogPrinter() {}
 
     public static Calculation createCalculation() {
         InvocationHandler handler = new CalculationInvocationHandler(new CalculationImpl());
