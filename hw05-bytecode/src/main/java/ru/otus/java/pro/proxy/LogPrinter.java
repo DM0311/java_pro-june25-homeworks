@@ -12,15 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.java.pro.annotation.Log;
 import ru.otus.java.pro.source.Calculation;
-import ru.otus.java.pro.source.CalculationImpl;
 
 public class LogPrinter {
     private static final Logger logger = LoggerFactory.getLogger(LogPrinter.class);
 
-    public LogPrinter() {}
+    private LogPrinter() {}
 
-    public static Calculation createCalculation() {
-        InvocationHandler handler = new CalculationInvocationHandler(new CalculationImpl());
+    public static Calculation createCalculation(Calculation calculation) {
+        InvocationHandler handler = new CalculationInvocationHandler(calculation);
         return (Calculation)
                 Proxy.newProxyInstance(LogPrinter.class.getClassLoader(), new Class<?>[] {Calculation.class}, handler);
     }
