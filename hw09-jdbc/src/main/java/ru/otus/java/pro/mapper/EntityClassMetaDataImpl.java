@@ -2,20 +2,46 @@ package ru.otus.java.pro.mapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import ru.otus.java.pro.core.annotation.Id;
 
 public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private final Class<T> clazz;
-    private Field idField;
-    private List<Field> allFields;
-    private Constructor<T> constructor;
+    private final Constructor<T> constructor;
+    private final Field idField;
+    private final List<Field> allFields;
+    private final List<Field> fieldsWithoutId;
 
     public EntityClassMetaDataImpl(Class<T> clazz) {
         this.clazz = clazz;
-        init();
+        this.constructor = initConstructor();
+        Field[] fields = clazz.getDeclaredFields();
+        List<Field> allFieldsList = new ArrayList<>();
+        List<Field> noIdFieldsList = new ArrayList<>();
+        Field foundIdField = null;
+
+        for (Field field : fields) {
+            field.setAccessible(true);
+            allFieldsList.add(field);
+
+            if (field.isAnnotationPresent(Id.class)) {
+                if (foundIdField != null) {
+                    throw new RuntimeException("Multiple @Id annotations found in " + clazz.getName());
+                }
+                foundIdField = field;
+            } else {
+                noIdFieldsList.add(field);
+            }
+        }
+
+        this.allFields = Collections.unmodifiableList(allFieldsList);
+        this.fieldsWithoutId = Collections.unmodifiableList(noIdFieldsList);
+        if (foundIdField == null) {
+            throw new RuntimeException("No field with @Id annotation found in " + clazz.getName());
+        }
+        this.idField = foundIdField;
     }
 
     @Override
@@ -43,28 +69,16 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public List<Field> getFieldsWithoutId() {
-        return allFields.stream().filter(field -> !field.equals(idField)).collect(Collectors.toList());
+        return fieldsWithoutId;
     }
 
-    private void init() {
-
+    private Constructor<T> initConstructor() {
         try {
-            this.constructor = clazz.getDeclaredConstructor();
-            this.constructor.setAccessible(true);
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("No default constructor found in " + clazz.getName(), e);
         }
-
-        this.allFields = Arrays.stream(clazz.getDeclaredFields())
-                .peek(field -> field.setAccessible(true))
-                .collect(Collectors.toList());
-
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst()
-                .ifPresent(field -> {
-                    field.setAccessible(true);
-                    this.idField = field;
-                });
     }
 }
