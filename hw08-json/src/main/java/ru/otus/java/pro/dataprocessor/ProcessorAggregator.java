@@ -10,8 +10,6 @@ public class ProcessorAggregator implements Processor {
     @Override
     public Map<String, Double> process(List<Measurement> data) {
         return data.stream()
-                .collect(Collectors.toMap(Measurement::name,
-                        Measurement::value,
-                        (oldVal, newVal) -> oldVal + newVal));
+                .collect(Collectors.toMap(Measurement::name, Measurement::value, (oldVal, newVal) -> oldVal + newVal));
     }
 }

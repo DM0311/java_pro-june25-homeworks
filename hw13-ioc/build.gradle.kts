@@ -9,8 +9,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.reflections:reflections")
-
+    // https://mvnrepository.com/artifact/org.reflections/reflections
+    implementation("org.reflections:reflections:0.9.11")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.assertj:assertj-core")

@@ -1,10 +1,9 @@
 package ru.otus.java.pro.services;
 
+import java.util.List;
 import ru.otus.java.pro.model.Equation;
 import ru.otus.java.pro.model.GameResult;
 import ru.otus.java.pro.model.Player;
-
-import java.util.List;
 
 public class GameProcessorImpl implements GameProcessor {
 

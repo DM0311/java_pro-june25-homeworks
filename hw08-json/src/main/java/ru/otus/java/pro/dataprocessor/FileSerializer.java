@@ -3,7 +3,6 @@ package ru.otus.java.pro.dataprocessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;

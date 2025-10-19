@@ -2,8 +2,7 @@ package ru.otus.java.pro;
 
 import ru.otus.java.pro.appcontainer.AppComponentsContainerImpl;
 import ru.otus.java.pro.appcontainer.api.AppComponentsContainer;
-import ru.otus.java.pro.config.AppConfig;
-import ru.otus.java.pro.services.GameProcessor;
+import ru.otus.java.pro.services.*;
 
 /*
 В классе AppComponentsContainerImpl реализовать обработку, полученной в конструкторе конфигурации,
@@ -27,15 +26,15 @@ public class App {
         // AppComponentsContainer container = new AppComponentsContainerImpl(AppConfig1.class, AppConfig2.class);
 
         // Тут можно использовать библиотеку Reflections (см. зависимости)
-        // AppComponentsContainer container = new AppComponentsContainerImpl("ru.otus.config");
+        AppComponentsContainer container = new AppComponentsContainerImpl("ru.otus.java.pro.config");
 
         // Обязательный вариант
-        AppComponentsContainer container = new AppComponentsContainerImpl(AppConfig.class);
+        // AppComponentsContainer container = new AppComponentsContainerImpl(AppConfig.class);
 
         // Приложение должно работать в каждом из указанных ниже вариантов
-        GameProcessor gameProcessor = container.getAppComponent(GameProcessor.class);
+        // GameProcessor gameProcessor = container.getAppComponent(GameProcessor.class);
         // GameProcessor gameProcessor = container.getAppComponent(GameProcessorImpl.class);
-        // GameProcessor gameProcessor = container.getAppComponent("gameProcessor");
+        GameProcessor gameProcessor = container.getAppComponent("gameProcessor");
 
         gameProcessor.startGame();
     }

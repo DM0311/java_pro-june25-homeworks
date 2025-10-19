@@ -11,7 +11,8 @@ public class HistoryListener implements Listener, HistoryReader {
     @Override
     public void onUpdated(Message msg) {
         Message.Builder builder = msg.toBuilder();
-        List<String> dataCopy = msg.getField13().getData().stream().map(String::valueOf).toList();
+        List<String> dataCopy =
+                msg.getField13().getData().stream().map(String::valueOf).toList();
         var f13 = new ObjectForMessage();
         f13.setData(dataCopy);
         builder.field13(f13);

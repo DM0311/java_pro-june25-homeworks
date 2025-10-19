@@ -1,12 +1,11 @@
 package ru.otus.java.pro.services;
 
-import ru.otus.java.pro.model.DivisionEquation;
-import ru.otus.java.pro.model.Equation;
-import ru.otus.java.pro.model.MultiplicationEquation;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import ru.otus.java.pro.model.DivisionEquation;
+import ru.otus.java.pro.model.Equation;
+import ru.otus.java.pro.model.MultiplicationEquation;
 
 public class EquationPreparerImpl implements EquationPreparer {
     @Override
