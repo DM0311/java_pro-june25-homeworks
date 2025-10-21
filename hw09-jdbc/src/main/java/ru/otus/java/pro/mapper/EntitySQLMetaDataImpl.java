@@ -3,7 +3,6 @@ package ru.otus.java.pro.mapper;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
-import ru.otus.java.pro.core.annotation.Id;
 
 public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData {
 
@@ -20,12 +19,7 @@ public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData {
                 .map(Field::getName)
                 .map(String::toLowerCase)
                 .toList();
-        String idColumnName = entityClassMetaDataClient
-                .getIdField()
-                .getAnnotation(Id.class)
-                .annotationType()
-                .getSimpleName()
-                .toLowerCase();
+        String idColumnName = entityClassMetaDataClient.getIdField().getName().toLowerCase();
         String noIdColumnsNames = String.join(", ", noIdColumns);
         String allColumnsNames = idColumnName + ", " + noIdColumnsNames;
         String params = noIdColumns.stream().map(c -> "?").collect(Collectors.joining(", "));

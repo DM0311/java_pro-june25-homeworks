@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import ru.otus.java.pro.core.annotation.Id;
 import ru.otus.java.pro.core.repository.DataTemplate;
 import ru.otus.java.pro.core.repository.DataTemplateException;
 import ru.otus.java.pro.core.repository.executor.DbExecutor;
@@ -39,7 +38,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
         String ps = entitySQLMetaData.getInsertSql();
         return dbExecutor
                 .executeSelect(connection, ps, List.of(), this::handleResults)
-                .orElseThrow();
+                .orElseThrow(() -> new DataTemplateException(new RuntimeException()));
     }
 
     @Override
@@ -50,7 +49,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
                     try {
                         return field.get(client);
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                        throw new DataTemplateException(e);
                     }
                 })
                 .toList();
@@ -90,11 +89,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
             while (rs.next()) {
                 T instance = constructor.newInstance();
                 for (Field field : entityClassMetaData.getAllFields()) {
-                    if (field.isAnnotationPresent(Id.class)) {
-                        field.set(instance, rs.getObject("id"));
-                    } else {
-                        field.set(instance, rs.getObject(field.getName().toLowerCase()));
-                    }
+                    field.set(instance, rs.getObject(field.getName().toLowerCase()));
                 }
                 out.add(instance);
             }
@@ -103,8 +98,4 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
             throw new DataTemplateException(e);
         }
     }
-
-    //    private List<Object> getParams(List<Field> fields){
-    //
-    //    }
 }
