@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import ru.otus.java.pro.core.repository.DataTemplate;
 import ru.otus.java.pro.core.repository.DataTemplateException;
 import ru.otus.java.pro.core.repository.executor.DbExecutor;
