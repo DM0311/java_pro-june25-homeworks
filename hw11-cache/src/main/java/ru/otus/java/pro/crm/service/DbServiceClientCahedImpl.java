@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.java.pro.cachehw.HwCache;
+import ru.otus.java.pro.cachehw.MyKeyWrapper;
 import ru.otus.java.pro.core.repository.DataTemplate;
 import ru.otus.java.pro.core.sessionmanager.TransactionManager;
 import ru.otus.java.pro.crm.model.Client;
@@ -16,12 +17,12 @@ public class DbServiceClientCahedImpl implements DBServiceClient {
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
-    private final HwCache<String, Client> cache;
+    private final HwCache<MyKeyWrapper, Client> cache;
 
     public DbServiceClientCahedImpl(
             TransactionManager transactionManager,
             DataTemplate<Client> clientDataTemplate,
-            HwCache<String, Client> cache) {
+            HwCache<MyKeyWrapper, Client> cache) {
         this.transactionManager = transactionManager;
         this.clientDataTemplate = clientDataTemplate;
         this.cache = cache;
@@ -37,7 +38,7 @@ public class DbServiceClientCahedImpl implements DBServiceClient {
                 return savedClient;
             }
             var savedClient = clientDataTemplate.update(session, clientCloned);
-            cache.put(String.valueOf(savedClient.getId()), savedClient);
+            cache.put(new MyKeyWrapper(savedClient.getId()), savedClient);
             log.info("updated client: {}", copy(savedClient));
             return savedClient;
         });
@@ -45,7 +46,7 @@ public class DbServiceClientCahedImpl implements DBServiceClient {
 
     @Override
     public Optional<Client> getClient(long id) {
-        Client cachedClient = cache.get(String.valueOf(id));
+        Client cachedClient = cache.get(new MyKeyWrapper(id));
         if (cachedClient != null) {
             return Optional.of(copy(cachedClient));
         }
@@ -53,7 +54,7 @@ public class DbServiceClientCahedImpl implements DBServiceClient {
             var clientOptional = clientDataTemplate.findById(session, id);
             log.info("client: {}", clientOptional);
             Client nwClient = clientOptional.get();
-            cache.put(String.valueOf(nwClient.getId()), nwClient);
+            cache.put(new MyKeyWrapper(nwClient.getId()), nwClient);
             return clientOptional;
         });
     }
@@ -64,7 +65,7 @@ public class DbServiceClientCahedImpl implements DBServiceClient {
             var clientList = clientDataTemplate.findAll(session);
             log.info("clientList:{}", clientList);
             for (Client cl : clientList) {
-                cache.put(String.valueOf(cl.getId()), cl);
+                cache.put(new MyKeyWrapper(cl.getId()), cl);
             }
             return clientList;
         });

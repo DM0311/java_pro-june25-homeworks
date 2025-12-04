@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.java.pro.cachehw.HwCache;
 import ru.otus.java.pro.cachehw.MyCache;
+import ru.otus.java.pro.cachehw.MyKeyWrapper;
 import ru.otus.java.pro.core.repository.DataTemplateHibernate;
 import ru.otus.java.pro.core.repository.HibernateUtils;
 import ru.otus.java.pro.core.sessionmanager.TransactionManagerHibernate;
@@ -36,7 +37,7 @@ public class DbServiceDemo {
         ///
         var clientTemplate = new DataTemplateHibernate<>(Client.class);
         ///
-        HwCache<String, Client> cache = new MyCache<>();
+        HwCache<MyKeyWrapper, Client> cache = new MyCache<>();
         cache.addListener((key, val, action) -> log.info("cache event: {} -> {}", action, key));
         var dbServiceClient = new DbServiceClientCahedImpl(transactionManager, clientTemplate, cache);
 
