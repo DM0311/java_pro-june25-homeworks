@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Окно администратора</title>
+</head>
+
+<body>
+<h3>Сохранить нового клиента</h3>
+
+<form id="myForm" class="grid-form" action="/users" method="post" accept-charset="UTF-8">
+
+    <label for="clientName">Имя клиента:</label>
+    <input type="text" id="clientName" name="clientName" placeholder="Введите имя пользователя">
+
+    <label for="clientAddress">Адрес клиента:</label>
+    <input type="text" id="clientAddress" name="clientAddress" placeholder="Введите адрес пользователя">
+
+    <label for="clientPhone">Телефон клиента:</label>
+    <input type="text" id="clientPhone" name="clientPhone" placeholder="Введите телефон пользователя">
+
+    <div></div>
+    <div class="actions">
+        <button type="submit">Создать</button>
+    </div>
+
+    <pre id="userDataContainer"></pre>
+
+</form>
+
+
+<h3>Список клиентов</h3>
+<table>
+    <thead>
+    <tr>
+        <th style="width:80px">ID</th>
+        <th>Имя</th>
+        <th>Адрес</th>
+        <th>Телефон</th>
+    </tr>
+    </thead>
+    <tbody>
+    <#if clients?? && clients?size gt 0>
+    <#list clients as c>
+    <tr>
+        <td>${c.id!}</td>
+        <td>${c.name!}</td>
+        <td>${(c.address.street)!}</td>
+        <td>
+            <#if c.phones?? && (c.phones?size > 0)>
+            ${ (c.phones[0].number)! }
+            <#else>
+            —
+        </#if>
+        </td>
+    </tr>
+    </#list>
+    <#else>
+    <tr><td colspan="4">Пока нет клиентов</td></tr>
+</#if>
+</tbody>
+</table>
+</body>
+
+<style>
+    .grid-form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-width: 400px;
+    }
+
+    .grid-form label {
+      font-weight: 500;
+    }
+
+    body { font-family: sans-serif; margin: 24px; }
+        form {
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 8px 12px;
+            max-width: 520px;
+        }
+        form label { align-self: center; }
+        table { border-collapse: collapse; width: 70%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+
+</style>
+</html>
