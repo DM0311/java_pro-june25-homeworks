@@ -2,17 +2,12 @@ package ru.otus.java.pro;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.net.URI;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.util.resource.PathResourceFactory;
 import org.eclipse.jetty.util.resource.Resource;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import ru.otus.java.pro.core.repository.DataTemplateHibernate;
-import ru.otus.java.pro.core.repository.HibernateUtils;
 import ru.otus.java.pro.core.sessionmanager.TransactionManagerHibernate;
-import ru.otus.java.pro.crm.dbmigrations.MigrationsExecutorFlyway;
 import ru.otus.java.pro.crm.model.Address;
 import ru.otus.java.pro.crm.model.Client;
 import ru.otus.java.pro.crm.model.Phone;
@@ -23,6 +18,9 @@ import ru.otus.java.pro.server.UsersWebServer;
 import ru.otus.java.pro.server.UsersWebServerBasicAuth;
 import ru.otus.java.pro.services.TemplateProcessor;
 import ru.otus.java.pro.services.TemplateProcessorImpl;
+import ru.otus.java.pro.utils.OrmUtils;
+
+import java.net.URI;
 
 public class WebServer {
 
@@ -34,18 +32,11 @@ public class WebServer {
 
     public static void main(String[] args) throws Exception {
 
-        Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
+        OrmUtils ormUtils= new OrmUtils(HIBERNATE_CFG_FILE);
+        ormUtils.migrateDatabase();
+        ormUtils.createSessionFactory(Client.class, Phone.class, Address.class);
 
-        String dbUrl = configuration.getProperty("hibernate.connection.url");
-        String dbUserName = configuration.getProperty("hibernate.connection.username");
-        String dbPassword = configuration.getProperty("hibernate.connection.password");
-
-        new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
-
-        SessionFactory sessionFactory =
-                HibernateUtils.buildSessionFactory(configuration, Client.class, Phone.class, Address.class);
-
-        var transactionManager = new TransactionManagerHibernate(sessionFactory);
+        var transactionManager = new TransactionManagerHibernate(ormUtils.getSessionFactory());
 
         var clientTemplate = new DataTemplateHibernate<>(Client.class);
 
