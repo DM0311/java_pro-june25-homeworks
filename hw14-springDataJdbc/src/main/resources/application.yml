@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5430/demoDB
+    username: usr
+    password: pwd
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    cleanDisabled: false
+    locations: classpath:db/migration
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+
+logging:
+  level:
+    org.springframework.jdbc.core.JdbcTemplate: TRACE

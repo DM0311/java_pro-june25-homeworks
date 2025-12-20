@@ -2,11 +2,9 @@ package ru.otus.java.pro.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import ru.otus.java.pro.core.repository.DataTemplateHibernate;
 import ru.otus.java.pro.core.repository.HibernateUtils;
 import ru.otus.java.pro.core.sessionmanager.TransactionManagerHibernate;
 import ru.otus.java.pro.crm.dbmigrations.MigrationsExecutorFlyway;
-import ru.otus.java.pro.crm.model.Client;
 
 public class OrmUtils {
     private Configuration configuration;
@@ -17,28 +15,27 @@ public class OrmUtils {
         this.configuration = new Configuration().configure(resource);
     }
 
-    public void createSessionFactory(Class<?>... annotatedClasses){
-       this.sessionFactory =  HibernateUtils.buildSessionFactory(configuration, annotatedClasses);
+    public void createSessionFactory(Class<?>... annotatedClasses) {
+        this.sessionFactory = HibernateUtils.buildSessionFactory(configuration, annotatedClasses);
     }
 
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
-    public void migrateDatabase(){
+    public void migrateDatabase() {
         new MigrationsExecutorFlyway(getDbUrl(), getDbUserName(), getDbPassword()).executeMigrations();
     }
 
-
-    private String getDbUrl(){
+    private String getDbUrl() {
         return configuration.getProperty("hibernate.connection.url");
     }
 
-    private String getDbUserName(){
+    private String getDbUserName() {
         return configuration.getProperty("hibernate.connection.username");
     }
 
-    private String getDbPassword(){
+    private String getDbPassword() {
         return configuration.getProperty("hibernate.connection.password");
     }
 }
