@@ -1,4 +1,4 @@
-create table message
+create table if not exists message
 (
     id       bigserial    not null primary key,
     room_id  varchar(50)  not null,

@@ -7,7 +7,6 @@ spring:
     username: usr
     password: pwd
   flyway:
-    enabled: true
     url: jdbc:postgresql://localhost:5430/demoDB
     user: usr
     password: pwd
