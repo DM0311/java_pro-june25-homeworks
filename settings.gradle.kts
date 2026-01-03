@@ -37,3 +37,8 @@ include("hw10-jpql")
 include("hw15-executors")
 include("hw11-cache")
 include("hw12-webServer")
+include("hw18-1408")
+include("hw18-1408:client-service")
+findProject(":hw18-1408:client-service")?.name = "client-service"
+include("hw18-1408:datastore-service")
+findProject(":hw18-1408:datastore-service")?.name = "datastore-service"
