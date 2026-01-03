@@ -12,9 +12,8 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation ("com.google.code.findbugs:jsr305")
-
-    implementation("io.r2dbc:r2dbc-postgresql")
+    implementation ("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("org.postgresql:r2dbc-postgresql:1.0.2.RELEASE")
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
