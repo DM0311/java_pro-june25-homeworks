@@ -1,5 +1,7 @@
 plugins {
-    id("java")
+    java
+    id("org.springframework.boot")
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
 group = "ru.otus.java.pro"
